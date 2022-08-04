@@ -65,6 +65,7 @@ fifo_t adc_buffer_fifo;
 proc_fifo_t buffer_filt;
 
 
+
 void main_test( void )
 {
         /* Start the two tasks as described in the comments at the top of this
@@ -78,8 +79,8 @@ void main_test( void )
 
     xTaskCreate ( tarefa1, "ADC Read", configMINIMAL_STACK_SIZE, &adc_buffer_fifo, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL);
     xTaskCreate ( tarefa2, "Filtragram", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL);
-    //xTaskCreate ( tarefa3, "Exibir", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL);
-    //xTaskCreate ( tarefa4, "ConsumoProcessos", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL);
+    xTaskCreate ( tarefa3, "Exibir", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL);
+    xTaskCreate ( tarefa4, "ConsumoProcessos", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL);
 
 
         // xTaskCreate( prvQueueReceiveTask,             /* The function that implements the task. */
@@ -142,29 +143,30 @@ void tarefa2 (void * pvParameters) {
 }
 
 void tarefa3 (void * pvParameters) {
-    const TickType_t delay = 10/portTICK_PERIOD_MS;
+    const TickType_t delay = 1000/portTICK_PERIOD_MS;
     char read_data[10];
-    int compare;
-    gets(read_data);
-    compare = strcmp(read_data, "obter");
-    printf("compare %d\n", compare);
-    /*while (1)
+    //int compare;
+    //gets(read_data);
+    //compare = strcmp(read_data, "obter");
+    //printf("compare %d\n", compare);
+    while (1)
     {
-        
-        
-        
-        
+        for (int i = 0; i < 64; i++) {
+            printf ("%f ", proc_get_item(&buffer_filt, i));
+        }
+        printf("\n%d\n\n", proc_get_last_index(&buffer_filt));
         vTaskDelay(delay);
-    }*/
+    }
 }
 
 void tarefa4 (void * pvParameters) {
     const TickType_t delay = 3000/portTICK_PERIOD_MS;
-    const char stat_buff[512];
+    const char stat_buff[1024] = {'\0'};
     while (1)
     {
+        //printf("hey\n");
         vTaskGetRunTimeStats(&stat_buff);
-        //printf("%s", stat_buff);
+        printf("%s\n", stat_buff);
         vTaskDelay(delay);
     }
 }

@@ -20,8 +20,8 @@ typedef struct proc_fifo proc_fifo_t;
 
 proc_fifo_t proc_create_fifo(uint16_t size);
 void proc_add_value(proc_fifo_t *buff, uint16_t value);
-uint16_t proc_get_last(proc_fifo_t *buff);
+float proc_get_last(proc_fifo_t *buff);
 uint16_t proc_get_last_index(proc_fifo_t *buff);
-uint16_t proc_get_item(proc_fifo_t *buff, int16_t index);
+float proc_get_item(proc_fifo_t *buff, int16_t index);
 
 #endif
